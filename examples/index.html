@@ -1,0 +1,1521 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QuarkCSS button laboratory</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+        background: #f8fafc;
+        color: #0f172a;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+      }
+      main {
+        width: min(1180px, calc(100vw - 32px));
+        margin: 0 auto;
+        padding: 32px 0 56px;
+      }
+      h1,
+      p {
+        text-align: center;
+      }
+      .control-panel {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+        margin: 24px auto;
+        padding: 16px;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        background: #fff;
+        box-shadow: 0 12px 35px rgb(15 23 42 / 0.08);
+      }
+      label {
+        display: grid;
+        gap: 6px;
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #475569;
+      }
+      select,
+      input {
+        min-height: 38px;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        padding: 8px 10px;
+        background: #fff;
+        color: #0f172a;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 1fr 92px;
+        gap: 8px;
+      }
+      .button-stage {
+        min-height: 240px;
+        display: grid;
+        place-items: center;
+        padding: 32px;
+      }
+      #demo-button {
+        appearance: none;
+        border-style: solid;
+        cursor: pointer;
+        font: inherit;
+        transition: all 0.2s ease;
+      }
+      #class-output {
+        display: block;
+        width: min(100%, 920px);
+        margin: 0 auto 24px;
+        padding: 16px;
+        border-radius: 16px;
+        background: #0f172a;
+        color: #e2e8f0;
+        white-space: pre-wrap;
+      }
+      .animation-list {
+        margin-top: 32px;
+        padding: 20px;
+        border-radius: 24px;
+        background: #111827;
+        color: #f8fafc;
+      }
+      .night-light-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 16px;
+        text-transform: none;
+        color: #f8fafc;
+      }
+      .night-light-label svg {
+        width: 18px;
+        height: 18px;
+        fill: currentColor;
+      }
+      .callout-hideList {
+        margin-left: 12px;
+        border: 0;
+        border-radius: 999px;
+        padding: 8px 14px;
+        background: #f8fafc;
+        color: #111827;
+      }
+      .animation-category {
+        margin-top: 18px;
+      }
+      .animation-category ul {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+        gap: 10px;
+        padding: 0;
+        list-style: none;
+      }
+      .animation-item {
+        display: grid;
+        gap: 4px;
+        padding: 12px;
+        border: 1px solid rgb(255 255 255 / 0.12);
+        border-radius: 14px;
+        background: rgb(255 255 255 / 0.06);
+      }
+      .animation-item span,
+      .animation-item small {
+        color: #cbd5e1;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>QuarkCSS — laboratório de 1 botão</h1>
+      <p>
+        Selecione classes de componente para estilizar apenas o botão central e teste animações com
+        o prefixo <code>animate:</code>.
+      </p>
+
+      <section class="control-panel" aria-label="Controles do botão">
+        <label
+          >bg-color
+          <span class="row"
+            ><select id="bg-color"></select
+            ><select id="bg-tone"></select></span
+        ></label>
+        <label
+          >bg-gradient
+          <select id="bg-gradient"></select
+        ></label>
+        <label
+          >from
+          <span class="row"
+            ><select id="from-color"></select
+            ><select id="from-tone"></select></span
+        ></label>
+        <label
+          >via
+          <span class="row"
+            ><select id="via-color"></select
+            ><select id="via-tone"></select></span
+        ></label>
+        <label
+          >to
+          <span class="row"
+            ><select id="to-color"></select
+            ><select id="to-tone"></select></span
+        ></label>
+        <label
+          >text-gradient
+          <select id="text-gradient"></select
+        ></label>
+        <label
+          >width
+          <span class="row"
+            ><input id="width-value" type="number" value="300" /><select
+              id="width-unit"
+            ></select></span
+        ></label>
+        <label
+          >height
+          <span class="row"
+            ><input id="height-value" type="number" value="60" /><select
+              id="height-unit"
+            ></select></span
+        ></label>
+        <label
+          >padding-x
+          <span class="row"
+            ><input id="px-value" type="number" value="24" /><select id="px-unit"></select></span
+        ></label>
+        <label
+          >border-radius
+          <select id="radius"></select
+        ></label>
+        <label>border width <input id="border-width" type="number" value="0" /></label>
+        <label
+          >shadow
+          <select id="shadow"></select
+        ></label>
+        <label
+          >font weight
+          <select id="font-weight"></select
+        ></label>
+        <label
+          >filter
+          <span class="row"
+            ><select id="filter-name"></select
+            ><input id="filter-value" type="number" value="0" /></span
+        ></label>
+        <label
+          >hover bg-color
+          <span class="row"
+            ><select id="hover-bg-color"></select
+            ><select id="hover-bg-tone"></select></span
+        ></label>
+        <label
+          >animation
+          <select id="animation">
+            <option value="">sem animação</option>
+            <option value="bounce">bounce</option>
+            <option value="flash">flash</option>
+            <option value="pulse">pulse</option>
+            <option value="rubberBand">rubberBand</option>
+            <option value="shakeX">shakeX</option>
+            <option value="shakeY">shakeY</option>
+            <option value="headShake">headShake</option>
+            <option value="swing">swing</option>
+            <option value="tada">tada</option>
+            <option value="wobble">wobble</option>
+            <option value="jello">jello</option>
+            <option value="heartBeat">heartBeat</option>
+            <option value="backInDown">backInDown</option>
+            <option value="backInLeft">backInLeft</option>
+            <option value="backInRight">backInRight</option>
+            <option value="backInUp">backInUp</option>
+            <option value="backOutDown">backOutDown</option>
+            <option value="backOutLeft">backOutLeft</option>
+            <option value="backOutRight">backOutRight</option>
+            <option value="backOutUp">backOutUp</option>
+            <option value="bounceIn">bounceIn</option>
+            <option value="bounceInDown">bounceInDown</option>
+            <option value="bounceInLeft">bounceInLeft</option>
+            <option value="bounceInRight">bounceInRight</option>
+            <option value="bounceInUp">bounceInUp</option>
+            <option value="bounceOut">bounceOut</option>
+            <option value="bounceOutDown">bounceOutDown</option>
+            <option value="bounceOutLeft">bounceOutLeft</option>
+            <option value="bounceOutRight">bounceOutRight</option>
+            <option value="bounceOutUp">bounceOutUp</option>
+            <option value="fadeIn">fadeIn</option>
+            <option value="fadeInDown">fadeInDown</option>
+            <option value="fadeInDownBig">fadeInDownBig</option>
+            <option value="fadeInLeft">fadeInLeft</option>
+            <option value="fadeInLeftBig">fadeInLeftBig</option>
+            <option value="fadeInRight">fadeInRight</option>
+            <option value="fadeInRightBig">fadeInRightBig</option>
+            <option value="fadeInUp">fadeInUp</option>
+            <option value="fadeInUpBig">fadeInUpBig</option>
+            <option value="fadeInTopLeft">fadeInTopLeft</option>
+            <option value="fadeInTopRight">fadeInTopRight</option>
+            <option value="fadeInBottomLeft">fadeInBottomLeft</option>
+            <option value="fadeInBottomRight">fadeInBottomRight</option>
+            <option value="fadeOut">fadeOut</option>
+            <option value="fadeOutDown">fadeOutDown</option>
+            <option value="fadeOutDownBig">fadeOutDownBig</option>
+            <option value="fadeOutLeft">fadeOutLeft</option>
+            <option value="fadeOutLeftBig">fadeOutLeftBig</option>
+            <option value="fadeOutRight">fadeOutRight</option>
+            <option value="fadeOutRightBig">fadeOutRightBig</option>
+            <option value="fadeOutUp">fadeOutUp</option>
+            <option value="fadeOutUpBig">fadeOutUpBig</option>
+            <option value="fadeOutTopLeft">fadeOutTopLeft</option>
+            <option value="fadeOutTopRight">fadeOutTopRight</option>
+            <option value="fadeOutBottomRight">fadeOutBottomRight</option>
+            <option value="fadeOutBottomLeft">fadeOutBottomLeft</option>
+            <option value="flip">flip</option>
+            <option value="flipInX">flipInX</option>
+            <option value="flipInY">flipInY</option>
+            <option value="flipOutX">flipOutX</option>
+            <option value="flipOutY">flipOutY</option>
+            <option value="lightSpeedInRight">lightSpeedInRight</option>
+            <option value="lightSpeedInLeft">lightSpeedInLeft</option>
+            <option value="lightSpeedOutRight">lightSpeedOutRight</option>
+            <option value="lightSpeedOutLeft">lightSpeedOutLeft</option>
+            <option value="rotateIn">rotateIn</option>
+            <option value="rotateInDownLeft">rotateInDownLeft</option>
+            <option value="rotateInDownRight">rotateInDownRight</option>
+            <option value="rotateInUpLeft">rotateInUpLeft</option>
+            <option value="rotateInUpRight">rotateInUpRight</option>
+            <option value="rotateOut">rotateOut</option>
+            <option value="rotateOutDownLeft">rotateOutDownLeft</option>
+            <option value="rotateOutDownRight">rotateOutDownRight</option>
+            <option value="rotateOutUpLeft">rotateOutUpLeft</option>
+            <option value="rotateOutUpRight">rotateOutUpRight</option>
+            <option value="hinge">hinge</option>
+            <option value="jackInTheBox">jackInTheBox</option>
+            <option value="rollIn">rollIn</option>
+            <option value="rollOut">rollOut</option>
+            <option value="zoomIn">zoomIn</option>
+            <option value="zoomInDown">zoomInDown</option>
+            <option value="zoomInLeft">zoomInLeft</option>
+            <option value="zoomInRight">zoomInRight</option>
+            <option value="zoomInUp">zoomInUp</option>
+            <option value="zoomOut">zoomOut</option>
+            <option value="zoomOutDown">zoomOutDown</option>
+            <option value="zoomOutLeft">zoomOutLeft</option>
+            <option value="zoomOutRight">zoomOutRight</option>
+            <option value="zoomOutUp">zoomOutUp</option>
+            <option value="slideInDown">slideInDown</option>
+            <option value="slideInLeft">slideInLeft</option>
+            <option value="slideInRight">slideInRight</option>
+            <option value="slideInUp">slideInUp</option>
+            <option value="slideOutDown">slideOutDown</option>
+            <option value="slideOutLeft">slideOutLeft</option>
+            <option value="slideOutRight">slideOutRight</option>
+            <option value="slideOutUp">slideOutUp</option>
+          </select></label
+        >
+      </section>
+
+      <section class="button-stage">
+        <button id="demo-button">WhatsApp passwordless</button>
+      </section>
+      <code id="class-output"></code>
+
+      <section class="animation-list animate:fadeInRight">
+        <label for="night-light-checkbox" class="night-light-label">
+          <input type="checkbox" id="night-light-checkbox" />
+          <span class="night-light-ball"></span>
+          <svg viewBox="0 0 512 512" class="sun-svg">
+            <path
+              d="M256 160c-52.9 0-96 43.1-96 96s43.1 96 96 96 96-43.1 96-96-43.1-96-96-96z"
+            ></path>
+          </svg>
+          <svg viewBox="0 0 512 512" class="moon-svg">
+            <path
+              d="M283.211 512c78.962 0 151.079-35.925 198.857-94.792-124.203 23.654-238.262-71.576-238.262-196.954 0-72.222 38.662-138.635 101.498-174.394A258.156 258.156 0 0 0 283.211 0c-141.309 0-256 114.511-256 256 0 141.309 114.511 256 256 256z"
+            ></path>
+          </svg>
+        </label>
+        <button class="callout-hideList button" type="button">Close list</button>
+        <section class="animation-category" id="attention_seekers">
+          <h3>Attention seekers</h3>
+          <ul>
+            <li class="animation-item" data-animation="bounce">
+              <strong>bounce</strong
+              ><span
+                >Chama atenção para uma ação disponível sem mudar o layout ao redor. Classe:
+                `animate:bounce`.</span
+              ><small
+                >Use em CTAs principais, notificações de oportunidade ou botões que precisam de
+                destaque moderado.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="flash">
+              <strong>flash</strong
+              ><span
+                >Chama atenção para uma ação disponível sem mudar o layout ao redor. Classe:
+                `animate:flash`.</span
+              ><small
+                >Use para celebrar uma ação, destacar uma oferta ou indicar sucesso sem navegar de
+                página.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="pulse">
+              <strong>pulse</strong
+              ><span
+                >Chama atenção para uma ação disponível sem mudar o layout ao redor. Classe:
+                `animate:pulse`.</span
+              ><small
+                >Use em CTAs principais, notificações de oportunidade ou botões que precisam de
+                destaque moderado.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="rubberBand">
+              <strong>rubberBand</strong
+              ><span
+                >Chama atenção para uma ação disponível sem mudar o layout ao redor. Classe:
+                `animate:rubberBand`.</span
+              ><small
+                >Use para celebrar uma ação, destacar uma oferta ou indicar sucesso sem navegar de
+                página.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="shakeX">
+              <strong>shakeX</strong
+              ><span
+                >Chama atenção para uma ação disponível sem mudar o layout ao redor. Classe:
+                `animate:shakeX`.</span
+              ><small
+                >Use para erro de validação, tentativa inválida ou feedback de ação
+                bloqueada.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="shakeY">
+              <strong>shakeY</strong
+              ><span
+                >Chama atenção para uma ação disponível sem mudar o layout ao redor. Classe:
+                `animate:shakeY`.</span
+              ><small
+                >Use para erro de validação, tentativa inválida ou feedback de ação
+                bloqueada.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="headShake">
+              <strong>headShake</strong
+              ><span
+                >Chama atenção para uma ação disponível sem mudar o layout ao redor. Classe:
+                `animate:headShake`.</span
+              ><small
+                >Use para erro de validação, tentativa inválida ou feedback de ação
+                bloqueada.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="swing">
+              <strong>swing</strong
+              ><span
+                >Chama atenção para uma ação disponível sem mudar o layout ao redor. Classe:
+                `animate:swing`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="tada">
+              <strong>tada</strong
+              ><span
+                >Chama atenção para uma ação disponível sem mudar o layout ao redor. Classe:
+                `animate:tada`.</span
+              ><small
+                >Use para celebrar uma ação, destacar uma oferta ou indicar sucesso sem navegar de
+                página.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="wobble">
+              <strong>wobble</strong
+              ><span
+                >Chama atenção para uma ação disponível sem mudar o layout ao redor. Classe:
+                `animate:wobble`.</span
+              ><small
+                >Use para erro de validação, tentativa inválida ou feedback de ação
+                bloqueada.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="jello">
+              <strong>jello</strong
+              ><span
+                >Chama atenção para uma ação disponível sem mudar o layout ao redor. Classe:
+                `animate:jello`.</span
+              ><small
+                >Use para erro de validação, tentativa inválida ou feedback de ação
+                bloqueada.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="heartBeat">
+              <strong>heartBeat</strong
+              ><span
+                >Chama atenção para uma ação disponível sem mudar o layout ao redor. Classe:
+                `animate:heartBeat`.</span
+              ><small
+                >Use em CTAs principais, notificações de oportunidade ou botões que precisam de
+                destaque moderado.</small
+              >
+            </li>
+          </ul>
+        </section>
+        <section class="animation-category" id="back_entrances">
+          <h3>Back entrances</h3>
+          <ul>
+            <li class="animation-item" data-animation="backInDown">
+              <strong>backInDown</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:backInDown`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="backInLeft">
+              <strong>backInLeft</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:backInLeft`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="backInRight">
+              <strong>backInRight</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:backInRight`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="backInUp">
+              <strong>backInUp</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:backInUp`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+          </ul>
+        </section>
+        <section class="animation-category" id="back_exits">
+          <h3>Back exits</h3>
+          <ul>
+            <li class="animation-item" data-animation="backOutDown">
+              <strong>backOutDown</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:backOutDown`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="backOutLeft">
+              <strong>backOutLeft</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:backOutLeft`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="backOutRight">
+              <strong>backOutRight</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:backOutRight`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="backOutUp">
+              <strong>backOutUp</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:backOutUp`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+          </ul>
+        </section>
+        <section class="animation-category" id="bouncing_entrances">
+          <h3>Bouncing entrances</h3>
+          <ul>
+            <li class="animation-item" data-animation="bounceIn">
+              <strong>bounceIn</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:bounceIn`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="bounceInDown">
+              <strong>bounceInDown</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:bounceInDown`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="bounceInLeft">
+              <strong>bounceInLeft</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:bounceInLeft`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="bounceInRight">
+              <strong>bounceInRight</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:bounceInRight`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="bounceInUp">
+              <strong>bounceInUp</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:bounceInUp`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+          </ul>
+        </section>
+        <section class="animation-category" id="bouncing_exits">
+          <h3>Bouncing exits</h3>
+          <ul>
+            <li class="animation-item" data-animation="bounceOut">
+              <strong>bounceOut</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:bounceOut`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="bounceOutDown">
+              <strong>bounceOutDown</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:bounceOutDown`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="bounceOutLeft">
+              <strong>bounceOutLeft</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:bounceOutLeft`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="bounceOutRight">
+              <strong>bounceOutRight</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:bounceOutRight`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="bounceOutUp">
+              <strong>bounceOutUp</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:bounceOutUp`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+          </ul>
+        </section>
+        <section class="animation-category" id="fading_entrances">
+          <h3>Fading entrances</h3>
+          <ul>
+            <li class="animation-item" data-animation="fadeIn">
+              <strong>fadeIn</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:fadeIn`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="fadeInDown">
+              <strong>fadeInDown</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:fadeInDown`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="fadeInDownBig">
+              <strong>fadeInDownBig</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:fadeInDownBig`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="fadeInLeft">
+              <strong>fadeInLeft</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:fadeInLeft`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="fadeInLeftBig">
+              <strong>fadeInLeftBig</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:fadeInLeftBig`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="fadeInRight">
+              <strong>fadeInRight</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:fadeInRight`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="fadeInRightBig">
+              <strong>fadeInRightBig</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:fadeInRightBig`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="fadeInUp">
+              <strong>fadeInUp</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:fadeInUp`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="fadeInUpBig">
+              <strong>fadeInUpBig</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:fadeInUpBig`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="fadeInTopLeft">
+              <strong>fadeInTopLeft</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:fadeInTopLeft`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="fadeInTopRight">
+              <strong>fadeInTopRight</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:fadeInTopRight`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="fadeInBottomLeft">
+              <strong>fadeInBottomLeft</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:fadeInBottomLeft`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="fadeInBottomRight">
+              <strong>fadeInBottomRight</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:fadeInBottomRight`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+          </ul>
+        </section>
+        <section class="animation-category" id="fading_exits">
+          <h3>Fading exits</h3>
+          <ul>
+            <li class="animation-item" data-animation="fadeOut">
+              <strong>fadeOut</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:fadeOut`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="fadeOutDown">
+              <strong>fadeOutDown</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:fadeOutDown`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="fadeOutDownBig">
+              <strong>fadeOutDownBig</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:fadeOutDownBig`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="fadeOutLeft">
+              <strong>fadeOutLeft</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:fadeOutLeft`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="fadeOutLeftBig">
+              <strong>fadeOutLeftBig</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:fadeOutLeftBig`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="fadeOutRight">
+              <strong>fadeOutRight</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:fadeOutRight`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="fadeOutRightBig">
+              <strong>fadeOutRightBig</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:fadeOutRightBig`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="fadeOutUp">
+              <strong>fadeOutUp</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:fadeOutUp`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="fadeOutUpBig">
+              <strong>fadeOutUpBig</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:fadeOutUpBig`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="fadeOutTopLeft">
+              <strong>fadeOutTopLeft</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:fadeOutTopLeft`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="fadeOutTopRight">
+              <strong>fadeOutTopRight</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:fadeOutTopRight`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="fadeOutBottomRight">
+              <strong>fadeOutBottomRight</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:fadeOutBottomRight`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="fadeOutBottomLeft">
+              <strong>fadeOutBottomLeft</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:fadeOutBottomLeft`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+          </ul>
+        </section>
+        <section class="animation-category" id="flippers">
+          <h3>Flippers</h3>
+          <ul>
+            <li class="animation-item" data-animation="flip">
+              <strong>flip</strong
+              ><span
+                >Cria uma virada 3D curta para enfatizar mudança de estado ou confirmação. Classe:
+                `animate:flip`.</span
+              ><small
+                >Use para alternância de estado, troca de modo, reveal de ícone ou confirmação
+                visual.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="flipInX">
+              <strong>flipInX</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:flipInX`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="flipInY">
+              <strong>flipInY</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:flipInY`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="flipOutX">
+              <strong>flipOutX</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:flipOutX`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="flipOutY">
+              <strong>flipOutY</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:flipOutY`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+          </ul>
+        </section>
+        <section class="animation-category" id="lightspeed">
+          <h3>Lightspeed</h3>
+          <ul>
+            <li class="animation-item" data-animation="lightSpeedInRight">
+              <strong>lightSpeedInRight</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:lightSpeedInRight`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="lightSpeedInLeft">
+              <strong>lightSpeedInLeft</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:lightSpeedInLeft`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="lightSpeedOutRight">
+              <strong>lightSpeedOutRight</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:lightSpeedOutRight`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="lightSpeedOutLeft">
+              <strong>lightSpeedOutLeft</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:lightSpeedOutLeft`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+          </ul>
+        </section>
+        <section class="animation-category" id="rotating_entrances">
+          <h3>Rotating entrances</h3>
+          <ul>
+            <li class="animation-item" data-animation="rotateIn">
+              <strong>rotateIn</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:rotateIn`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="rotateInDownLeft">
+              <strong>rotateInDownLeft</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:rotateInDownLeft`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="rotateInDownRight">
+              <strong>rotateInDownRight</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:rotateInDownRight`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="rotateInUpLeft">
+              <strong>rotateInUpLeft</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:rotateInUpLeft`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="rotateInUpRight">
+              <strong>rotateInUpRight</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:rotateInUpRight`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+          </ul>
+        </section>
+        <section class="animation-category" id="rotating_exits">
+          <h3>Rotating exits</h3>
+          <ul>
+            <li class="animation-item" data-animation="rotateOut">
+              <strong>rotateOut</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:rotateOut`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="rotateOutDownLeft">
+              <strong>rotateOutDownLeft</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:rotateOutDownLeft`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="rotateOutDownRight">
+              <strong>rotateOutDownRight</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:rotateOutDownRight`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="rotateOutUpLeft">
+              <strong>rotateOutUpLeft</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:rotateOutUpLeft`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="rotateOutUpRight">
+              <strong>rotateOutUpRight</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:rotateOutUpRight`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+          </ul>
+        </section>
+        <section class="animation-category" id="specials">
+          <h3>Specials</h3>
+          <ul>
+            <li class="animation-item" data-animation="hinge">
+              <strong>hinge</strong
+              ><span
+                >Cria uma microinteração marcante para eventos especiais em componentes. Classe:
+                `animate:hinge`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="jackInTheBox">
+              <strong>jackInTheBox</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:jackInTheBox`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="rollIn">
+              <strong>rollIn</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:rollIn`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="rollOut">
+              <strong>rollOut</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:rollOut`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+          </ul>
+        </section>
+        <section class="animation-category" id="zooming_entrances">
+          <h3>Zooming entrances</h3>
+          <ul>
+            <li class="animation-item" data-animation="zoomIn">
+              <strong>zoomIn</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:zoomIn`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="zoomInDown">
+              <strong>zoomInDown</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:zoomInDown`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="zoomInLeft">
+              <strong>zoomInLeft</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:zoomInLeft`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="zoomInRight">
+              <strong>zoomInRight</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:zoomInRight`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="zoomInUp">
+              <strong>zoomInUp</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:zoomInUp`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+          </ul>
+        </section>
+        <section class="animation-category" id="zooming_exits">
+          <h3>Zooming exits</h3>
+          <ul>
+            <li class="animation-item" data-animation="zoomOut">
+              <strong>zoomOut</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:zoomOut`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="zoomOutDown">
+              <strong>zoomOutDown</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:zoomOutDown`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="zoomOutLeft">
+              <strong>zoomOutLeft</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:zoomOutLeft`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="zoomOutRight">
+              <strong>zoomOutRight</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:zoomOutRight`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="zoomOutUp">
+              <strong>zoomOutUp</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:zoomOutUp`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+          </ul>
+        </section>
+        <section class="animation-category" id="sliding_entrances">
+          <h3>Sliding entrances</h3>
+          <ul>
+            <li class="animation-item" data-animation="slideInDown">
+              <strong>slideInDown</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:slideInDown`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="slideInLeft">
+              <strong>slideInLeft</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:slideInLeft`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="slideInRight">
+              <strong>slideInRight</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:slideInRight`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="slideInUp">
+              <strong>slideInUp</strong
+              ><span
+                >Anima a entrada do componente com movimento perceptível e positivo. Classe:
+                `animate:slideInUp`.</span
+              ><small
+                >Use quando um botão, CTA ou ação contextual aparece após uma etapa do fluxo.</small
+              >
+            </li>
+          </ul>
+        </section>
+        <section class="animation-category" id="sliding_exits">
+          <h3>Sliding exits</h3>
+          <ul>
+            <li class="animation-item" data-animation="slideOutDown">
+              <strong>slideOutDown</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:slideOutDown`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="slideOutLeft">
+              <strong>slideOutLeft</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:slideOutLeft`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="slideOutRight">
+              <strong>slideOutRight</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:slideOutRight`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+            <li class="animation-item" data-animation="slideOutUp">
+              <strong>slideOutUp</strong
+              ><span
+                >Anima a saída do componente, ajudando o usuário a perceber que a ação foi
+                concluída. Classe: `animate:slideOutUp`.</span
+              ><small
+                >Use em botões que desaparecem após cancelamento, fechamento, envio ou
+                remoção.</small
+              >
+            </li>
+          </ul>
+        </section>
+      </section>
+    </main>
+    <script>
+      const colors = [
+        'slate',
+        'gray',
+        'zinc',
+        'neutral',
+        'stone',
+        'red',
+        'orange',
+        'amber',
+        'yellow',
+        'lime',
+        'green',
+        'emerald',
+        'teal',
+        'cyan',
+        'sky',
+        'blue',
+        'indigo',
+        'violet',
+        'purple',
+        'fuchsia',
+        'pink',
+        'rose',
+      ]
+      const tones = ['50', '100', '200', '300', '400', '500', '600', '700', '800']
+      const gradients = ['', 'to-b', 'to-t', 'to-br', 'to-lr', 'to-tr', 'to-tl']
+      const units = ['px', '%', 'vw', 'rem', 'em']
+      const radius = [
+        'rounded-none',
+        'rounded-sm',
+        'rounded',
+        'rounded-md',
+        'rounded-lg',
+        'rounded-xl',
+        'rounded-2xl',
+        'rounded-full',
+      ]
+      const shadows = [
+        'shadow-none',
+        'shadow-sm',
+        'shadow',
+        'shadow-md',
+        'shadow-lg',
+        'shadow-xl',
+        'shadow-2xl',
+      ]
+      const weights = ['font-normal', 'font-medium', 'font-semibold', 'font-bold', 'font-extrabold']
+      const filters = [
+        '',
+        'blur',
+        'brightness',
+        'contrast',
+        'grayscale',
+        'hue-rotate',
+        'invert',
+        'saturate',
+        'sepia',
+      ]
+      const hex = {
+        slate: '#475569',
+        gray: '#4b5563',
+        zinc: '#52525b',
+        neutral: '#525252',
+        stone: '#57534e',
+        red: '#ef4444',
+        orange: '#f97316',
+        amber: '#f59e0b',
+        yellow: '#eab308',
+        lime: '#84cc16',
+        green: '#22c55e',
+        emerald: '#10b981',
+        teal: '#14b8a6',
+        cyan: '#06b6d4',
+        sky: '#0ea5e9',
+        blue: '#3b82f6',
+        indigo: '#6366f1',
+        violet: '#8b5cf6',
+        purple: '#a855f7',
+        fuchsia: '#d946ef',
+        pink: '#ec4899',
+        rose: '#f43f5e',
+      }
+      const $ = (id) => document.getElementById(id)
+      function fill(id, values, selected = values[0]) {
+        $(id).innerHTML = values
+          .map(
+            (v) => `<option value="${v}" ${v === selected ? 'selected' : ''}>${v || '—'}</option>`,
+          )
+          .join('')
+      }
+      ;['bg-color', 'from-color', 'to-color', 'hover-bg-color'].forEach((id) =>
+        fill(id, colors, id === 'bg-color' ? 'green' : 'emerald'),
+      )
+      fill('via-color', ['', ...colors], '')
+      ;['bg-tone', 'from-tone', 'via-tone', 'to-tone', 'hover-bg-tone'].forEach((id) =>
+        fill(id, tones, id.includes('hover') ? '700' : '600'),
+      )
+      fill('bg-gradient', gradients, '')
+      fill('text-gradient', gradients, '')
+      ;['width-unit', 'height-unit', 'px-unit'].forEach((id) => fill(id, units, 'px'))
+      fill('radius', radius, 'rounded-full')
+      fill('shadow', shadows, 'shadow-lg')
+      fill('font-weight', weights, 'font-bold')
+      fill('filter-name', filters, '')
+      function luminance(hexColor) {
+        const n = parseInt(hexColor.slice(1), 16)
+        const r = (n >> 16) & 255,
+          g = (n >> 8) & 255,
+          b = n & 255
+        return (0.299 * r + 0.587 * g + 0.114 * b) / 255
+      }
+      function cssSize(valueId, unitId) {
+        return `${$(valueId).value || 0}${$(unitId).value}`
+      }
+      function update() {
+        const button = $('demo-button')
+        const bg = hex[$('bg-color').value]
+        const animation = $('animation').value
+        const classes = [
+          `w-[${cssSize('width-value', 'width-unit')}]`,
+          `h-[${cssSize('height-value', 'height-unit')}]`,
+          `px-[${cssSize('px-value', 'px-unit')}]`,
+          $('radius').value,
+          $('shadow').value,
+          $('font-weight').value,
+          `bg-${$('bg-color').value}-${$('bg-tone').value}`,
+        ]
+        if ($('bg-gradient').value)
+          classes.push(
+            `bg-gradient-${$('bg-gradient').value}`,
+            `from-${$('from-color').value}-${$('from-tone').value}`,
+            $('via-color').value ? `via-${$('via-color').value}-${$('via-tone').value}` : '',
+            `to-${$('to-color').value}-${$('to-tone').value}`,
+          )
+        if ($('text-gradient').value) classes.push(`text-gradient-${$('text-gradient').value}`)
+        if ($('filter-name').value)
+          classes.push(`${$('filter-name').value}-${$('filter-value').value}`)
+        classes.push(`hover:bg-${$('hover-bg-color').value}-${$('hover-bg-tone').value}`)
+        if (animation) classes.push(`animate:${animation}`)
+        button.className = classes.filter(Boolean).join(' ')
+        button.style.width = cssSize('width-value', 'width-unit')
+        button.style.height = cssSize('height-value', 'height-unit')
+        button.style.paddingInline = cssSize('px-value', 'px-unit')
+        button.style.borderRadius = $('radius').value === 'rounded-full' ? '999px' : '16px'
+        button.style.borderWidth = `${$('border-width').value}px`
+        button.style.boxShadow =
+          $('shadow').value === 'shadow-none' ? 'none' : '0 18px 36px rgb(15 23 42 / .22)'
+        button.style.fontWeight =
+          $('font-weight').value.replace('font-', '') === 'bold' ? '700' : '600'
+        button.style.background = $('bg-gradient').value
+          ? `linear-gradient(135deg, ${hex[$('from-color').value]}, ${$('via-color').value ? hex[$('via-color').value] + ',' : ''} ${hex[$('to-color').value]})`
+          : bg
+        button.style.color = luminance(bg) > 0.58 ? '#111827' : '#ffffff'
+        button.style.animation = animation ? `${animation} var(--animate-duration, 1s) both` : ''
+        $('class-output').textContent = button.className
+      }
+      document
+        .querySelectorAll('select,input')
+        .forEach((el) => el.addEventListener('input', update))
+      update()
+    </script>
+  </body>
+</html>

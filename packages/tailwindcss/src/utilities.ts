@@ -1,3 +1,4 @@
+import { ANIMATE_CSS_ANIMATION_NAMES } from './animate-css'
 import {
   atRoot,
   atRule,
@@ -119,6 +120,11 @@ export class Utilities {
 
   get(name: string) {
     return this.utilities.has(name) ? this.utilities.get(name) : []
+  }
+
+  delete(name: string) {
+    this.utilities.delete(name)
+    this.completions.delete(name)
   }
 
   getCompletions(name: string): SuggestionGroup[] {
@@ -6034,6 +6040,126 @@ export function createUtilities(theme: Theme) {
       hasDefaultValue: true,
     },
   ])
+
+  /**
+   * @css Animate.css compatible component animations
+   *
+   * QuarkCSS exposes Animate.css animations as `animate:<name>` classes. The
+   * `animate` variant is a no-op registered in variants.ts, so the final class
+   * selector remains a single escaped class such as `.animate\:rubberBand`.
+   * Each animation class includes the required Animate.css base behavior that
+   * used to live in `.animate__animated`, so consumers only need one class.
+   */
+  for (let animationName of ANIMATE_CSS_ANIMATION_NAMES) {
+    staticUtility(animationName, [
+      ['animation-name', animationName],
+      ['animation-duration', 'var(--animate-duration, 1s)'],
+      ['animation-fill-mode', 'both'],
+    ])
+  }
+
+  /**
+   * QuarkCSS is component-first, so remove page-layout and diagramming
+   * utilities from the default registry while keeping visual/button-facing
+   * styling utilities available.
+   */
+  let layoutUtilityRoots = new Set([
+    'container',
+    '@container',
+    'columns',
+    'break-after',
+    'break-before',
+    'break-inside',
+    'box-decoration',
+    'float',
+    'clear',
+    'isolate',
+    'isolation',
+    'object',
+    'overflow',
+    'overscroll',
+    'position',
+    'inset',
+    'inset-x',
+    'inset-y',
+    'start',
+    'end',
+    'top',
+    'right',
+    'bottom',
+    'left',
+    'z',
+    'basis',
+    'grow',
+    'shrink',
+    'order',
+    'grid',
+    'grid-cols',
+    'grid-rows',
+    'col',
+    'col-start',
+    'col-end',
+    'row',
+    'row-start',
+    'row-end',
+    'auto-cols',
+    'auto-rows',
+    'gap',
+    'gap-x',
+    'gap-y',
+    'justify',
+    'justify-items',
+    'justify-self',
+    'content',
+    'items',
+    'self',
+    'place-content',
+    'place-items',
+    'place-self',
+    'space-x',
+    'space-y',
+    'divide-x',
+    'divide-y',
+    'scroll',
+    'snap',
+    'list',
+    'table',
+  ])
+
+  let layoutUtilityNames = new Set([
+    'block',
+    'inline-block',
+    'inline',
+    'hidden',
+    'flex',
+    'inline-flex',
+    'grid',
+    'inline-grid',
+    'contents',
+    'flow-root',
+    'static',
+    'fixed',
+    'absolute',
+    'relative',
+    'sticky',
+    'visible',
+    'invisible',
+    'collapse',
+    'sr-only',
+    'not-sr-only',
+    'truncate',
+    'clearfix',
+  ])
+
+  for (let name of [...utilities.keys('static'), ...utilities.keys('functional')]) {
+    let isLayoutUtility =
+      layoutUtilityNames.has(name) ||
+      Array.from(layoutUtilityRoots).some((root) => name === root || name.startsWith(`${root}-`))
+
+    if (isLayoutUtility) {
+      utilities.delete(name)
+    }
+  }
 
   return utilities
 }
