@@ -371,6 +371,8 @@ export function createVariants(theme: Theme): Variants {
     )
   }
 
+  variants.static('animate', () => {}, { compounds: Compounds.StyleRules })
+
   staticVariant('*', [':is(& > *)'], { compounds: Compounds.Never })
   staticVariant('**', [':is(& *)'], { compounds: Compounds.Never })
 
