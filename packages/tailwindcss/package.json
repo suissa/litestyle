@@ -1,15 +1,15 @@
 {
   "name": "tailwindcss",
   "version": "4.3.0",
-  "description": "A utility-first CSS framework for rapidly building custom user interfaces.",
+  "description": "Component-first CSS utilities for button styling and Animate.css-powered microinteractions.",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tailwindlabs/tailwindcss.git",
-    "directory": "packages/tailwindcss"
+    "url": "https://github.com/quarkcss/quarkcss.git",
+    "directory": "packages/quarkcss"
   },
-  "bugs": "https://github.com/tailwindlabs/tailwindcss/issues",
-  "homepage": "https://tailwindcss.com",
+  "bugs": "https://github.com/quarkcss/quarkcss/issues",
+  "homepage": "https://github.com/quarkcss/quarkcss",
   "scripts": {
     "lint": "tsc --noEmit",
     "build": "tsup-node --env.NODE_ENV production",
@@ -22,6 +22,16 @@
       "types": "./src/index.ts",
       "require": "./dist/lib.js",
       "import": "./src/index.ts"
+    },
+    "./animate-orchestrator": {
+      "types": "./src/animate-orchestrator.ts",
+      "require": "./dist/animate-orchestrator.js",
+      "import": "./src/animate-orchestrator.ts"
+    },
+    "./animate-orchestrator.js": {
+      "types": "./src/animate-orchestrator.ts",
+      "require": "./dist/animate-orchestrator.js",
+      "import": "./src/animate-orchestrator.ts"
     },
     "./colors": {
       "require": "./src/compat/colors.cts",
@@ -74,6 +84,16 @@
         "style": "./index.css",
         "require": "./dist/lib.js",
         "import": "./dist/lib.mjs"
+      },
+      "./animate-orchestrator": {
+        "types": "./dist/animate-orchestrator.d.mts",
+        "require": "./dist/animate-orchestrator.js",
+        "import": "./dist/animate-orchestrator.mjs"
+      },
+      "./animate-orchestrator.js": {
+        "types": "./dist/animate-orchestrator.d.mts",
+        "require": "./dist/animate-orchestrator.js",
+        "import": "./dist/animate-orchestrator.mjs"
       },
       "./plugin": {
         "require": "./dist/plugin.js",
