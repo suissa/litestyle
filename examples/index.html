@@ -85,6 +85,39 @@
         white-space: pre-wrap;
       }
 
+      .event-demo {
+        margin: 0 auto 28px;
+        padding: 20px;
+        border: 1px solid #dbeafe;
+        border-radius: 20px;
+        background: #eff6ff;
+        text-align: center;
+      }
+      .event-demo-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+        margin: 16px 0;
+      }
+      .event-modal {
+        width: min(100%, 420px);
+        margin: 12px auto;
+        padding: 20px;
+        border-radius: 18px;
+        background: #111827;
+        color: #fff;
+      }
+      .event-demo button {
+        min-height: 42px;
+        border: 0;
+        border-radius: 999px;
+        padding: 0 18px;
+        background: #2563eb;
+        color: #fff;
+        font-weight: 800;
+        cursor: pointer;
+      }
       .sequence-demo {
         margin: 0 auto 28px;
         padding: 20px;
@@ -355,6 +388,29 @@
         <button id="demo-button">WhatsApp passwordless</button>
       </section>
       <code id="class-output"></code>
+
+      <section class="event-demo" aria-label="Broker UIbiQ event-driven">
+        <h2>Broker event-driven UIbiQ</h2>
+        <p>
+          O modal abaixo responde a <code>enter.modal</code> e <code>close.modal</code> com
+          animações publicadas via <code>UIbiQ.pub()</code>.
+        </p>
+        <div
+          id="event-modal"
+          class="event-modal enter.modal-animate__lightSpeedInRight close.modal-animate__lightSpeedOutRight"
+          data-state="idle"
+        >
+          <strong>Modal animado por evento</strong>
+          <p>Evento atual: <span id="event-name">nenhum</span></p>
+          <button id="close-event-modal" type="button">Fechar modal</button>
+        </div>
+        <div class="event-demo-actions">
+          <button id="open-event-modal" type="button" data-contact="WhatsApp passwordless">
+            Publicar enter.modal
+          </button>
+          <button id="close-event-modal-secondary" type="button">Publicar close.modal</button>
+        </div>
+      </section>
 
       <section class="sequence-demo" aria-label="Orquestração de animações">
         <h2>Orquestração sequencial</h2>
@@ -1689,6 +1745,56 @@
           ? value.slice(1, -1).replace(/_/g, ' ')
           : value.replace(/_/g, ' ')
       }
+
+      const UIbiQ = (() => {
+        const animationNames = sequenceAnimationNames
+        const bindings = new Map()
+        const normalize = (value) => value.replace('animate__', '').replace('animate:', '')
+        const addBinding = (event, animation, element) => {
+          if (!animationNames.has(animation)) return
+          const list = bindings.get(event) ?? []
+          list.push({ element, animation })
+          bindings.set(event, list)
+        }
+        document
+          .querySelectorAll('[class*="animate__"], [class*="animate:"]')
+          .forEach((element) => {
+            ;[...element.classList].forEach((className) => {
+              if (className.includes(':animate__')) {
+                const [event, animation] = className.split(':animate__')
+                addBinding(event, normalize(animation), element)
+              } else if (className.includes('-animate__')) {
+                const index = className.lastIndexOf('-animate__')
+                addBinding(
+                  className.slice(0, index),
+                  normalize(className.slice(index + 1)),
+                  element,
+                )
+              }
+            })
+          })
+        return {
+          pub(event, data) {
+            ;(bindings.get(event) ?? []).forEach(({ element, animation }) => {
+              element.dispatchEvent(
+                new CustomEvent('uibiq:animate', { detail: { event, data, animation } }),
+              )
+              element.style.animation = 'none'
+              element.offsetWidth
+              element.style.animation = `${animation} var(--animate-duration, 1s) both`
+            })
+          },
+        }
+      })()
+      document.getElementById('event-modal').addEventListener('uibiq:animate', (event) => {
+        document.getElementById('event-name').textContent = event.detail.event
+      })
+      $('open-event-modal').addEventListener('click', (event) =>
+        UIbiQ.pub('enter.modal', event.currentTarget.dataset),
+      )
+      $('close-event-modal').addEventListener('click', () => UIbiQ.pub('close.modal'))
+      $('close-event-modal-secondary').addEventListener('click', () => UIbiQ.pub('close.modal'))
+
       const runExampleSequence = async () => {
         const nodes = [...document.querySelectorAll('.sequence-demo [class*="animate:seq-"]')]
           .map((element, index) => {

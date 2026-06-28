@@ -73,7 +73,17 @@
     "./theme.css": "./theme.css",
     "./theme": "./theme.css",
     "./utilities.css": "./utilities.css",
-    "./utilities": "./utilities.css"
+    "./utilities": "./utilities.css",
+    "./event-broker": {
+      "types": "./src/event-broker.ts",
+      "require": "./dist/event-broker.js",
+      "import": "./src/event-broker.ts"
+    },
+    "./event-broker.js": {
+      "types": "./src/event-broker.ts",
+      "require": "./dist/event-broker.js",
+      "import": "./src/event-broker.ts"
+    }
   },
   "publishConfig": {
     "provenance": true,
@@ -135,7 +145,17 @@
       "./theme.css": "./theme.css",
       "./theme": "./theme.css",
       "./utilities.css": "./utilities.css",
-      "./utilities": "./utilities.css"
+      "./utilities": "./utilities.css",
+      "./event-broker": {
+        "types": "./dist/event-broker.d.mts",
+        "require": "./dist/event-broker.js",
+        "import": "./dist/event-broker.mjs"
+      },
+      "./event-broker.js": {
+        "types": "./dist/event-broker.d.mts",
+        "require": "./dist/event-broker.js",
+        "import": "./dist/event-broker.mjs"
+      }
     }
   },
   "style": "index.css",
