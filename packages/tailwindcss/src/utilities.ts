@@ -6041,6 +6041,26 @@ export function createUtilities(theme: Theme) {
     },
   ])
 
+  functionalUtility('before', {
+    handle: (value) => [decl('--quark-animate-before', JSON.stringify(value))],
+  })
+
+  functionalUtility('after', {
+    handle: (value) => [decl('--quark-animate-after', JSON.stringify(value))],
+  })
+
+  functionalUtility('seq', {
+    handleBareValue: ({ value }) => {
+      if (!isPositiveInteger(value)) return null
+      return value
+    },
+    handle: (value) => [decl('--quark-animate-seq', value)],
+  })
+
+  functionalUtility('seq-interval', {
+    handle: (value) => [decl('--quark-animate-seq-interval', value)],
+  })
+
   /**
    * @css Animate.css compatible component animations
    *

@@ -18,6 +18,93 @@ Em Animate.css puro normalmente seria necessário usar duas classes, por exemplo
 
 A classe `animate:rubberBand` adiciona transparentemente o comportamento obrigatório de `animate__animated` (`animation-duration` e `animation-fill-mode`) e troca o prefixo externo de `animate__` para `animate:`.
 
+## Broker UIbiQ: eventos publicáveis + comportamento animado
+
+QuarkCSS agora inclui um broker leve chamado `UIbiQ` para simular uma arquitetura event-driven no front-end. Por enquanto ele implementa apenas **publish** (`pub`) e assinaturas simples (`sub`), conectando a emissão de um evento à execução de uma animação no elemento que declarou esse evento por classe.
+
+```html
+<Modal class="modalEnter:animate__lightSpeedInRight close.modal-animate__lightSpeedOutRight" data>
+  <button id="closeModal">Fechar</button>
+</Modal>
+
+<Contact id="contact" data-x="123">Abrir contato</Contact>
+
+<script type="module">
+  import { UIbiQ } from 'tailwindcss/event-broker'
+
+  closeModal.addEventListener('click', () => UIbiQ.pub('close.modal'))
+  contact.addEventListener('click', () => UIbiQ.pub('modalEnter', contact.dataset))
+</script>
+```
+
+Sintaxes aceitas para ligar evento → animação:
+
+- `evento:animate__nomeDaAnimacao` — exemplo: `modalEnter:animate__lightSpeedInRight`.
+- `evento-animate__nomeDaAnimacao` — útil quando o evento tem pontos, exemplo: `close.modal-animate__lightSpeedOutRight`.
+- `evento:animate:nomeDaAnimacao` — variação usando o prefixo QuarkCSS.
+
+Quando `UIbiQ.pub('close.modal', data)` é chamado, o broker procura os elementos já escaneados com esse evento, reinicia a animação e dispara eventos DOM `uibiq:before-animate` e `uibiq:animate` com `{ event, data, target, animation }`.
+
+### Uso em JS puro e TypeScript
+
+```ts
+import { createUIbiQBroker } from 'tailwindcss/event-broker'
+
+const UIbiQ = createUIbiQBroker()
+UIbiQ.pub('enter.modal', { id: 1 })
+UIbiQ.sub('close.modal', (data) => console.log(data))
+```
+
+### Uso em React
+
+```tsx
+import { UIbiQ } from 'tailwindcss/event-broker'
+
+export function Contact({ data }) {
+  return <button onClick={UIbiQ.react().pub('enter.modal', data)}>Abrir</button>
+}
+```
+
+### Uso em Elm via ports
+
+```js
+import { UIbiQ } from 'tailwindcss/event-broker'
+
+const app = Elm.Main.init()
+UIbiQ.elm(app.ports)
+```
+
+No Elm, publique mensagens pela port `uibiqPublish` no formato `{ event: string, data?: unknown }`.
+
+## Orquestração de animações
+
+QuarkCSS também inclui uma pequena orquestração para animar componentes em sequência. Use as classes:
+
+```html
+<button class="animate:pulse animate:seq-1 animate:seq-interval-[0.15s]">Preparar</button>
+<button
+  id="confirmar"
+  class="animate:rubberBand animate:seq-2 animate:seq-interval-[0.25s] animate:after-[#preparar]"
+>
+  Confirmar
+</button>
+```
+
+- `animate:seq-{counter}` define a ordem base da sequência.
+- `animate:seq-interval-[tempo]` define quanto tempo esperar antes de iniciar aquele item (`s` e `ms` são aceitos).
+- `animate:before-[selector]` força o elemento atual a animar antes dos elementos sequenciados que combinam com o selector.
+- `animate:after-[selector]` força o elemento atual a animar depois dos elementos sequenciados que combinam com o selector.
+
+Para ativar a orquestração em projetos JavaScript, importe o runtime:
+
+```js
+import { orchestrateQuarkAnimations } from 'tailwindcss/animate-orchestrator'
+
+orchestrateQuarkAnimations()
+```
+
+O runtime encontra os elementos com `animate:seq-*`, pausa a animação inicial, respeita `before`/`after`, aguarda o intervalo configurado e só inicia o próximo elemento quando a animação atual finaliza.
+
 ## Example
 
 Abra `examples/index.html` para testar um único botão centralizado com selects de cor, tom, gradiente, largura, altura, filtros, hover e animação.

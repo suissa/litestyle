@@ -23,6 +23,16 @@
       "require": "./dist/lib.js",
       "import": "./src/index.ts"
     },
+    "./animate-orchestrator": {
+      "types": "./src/animate-orchestrator.ts",
+      "require": "./dist/animate-orchestrator.js",
+      "import": "./src/animate-orchestrator.ts"
+    },
+    "./animate-orchestrator.js": {
+      "types": "./src/animate-orchestrator.ts",
+      "require": "./dist/animate-orchestrator.js",
+      "import": "./src/animate-orchestrator.ts"
+    },
     "./colors": {
       "require": "./src/compat/colors.cts",
       "import": "./src/compat/colors.ts"
@@ -63,7 +73,17 @@
     "./theme.css": "./theme.css",
     "./theme": "./theme.css",
     "./utilities.css": "./utilities.css",
-    "./utilities": "./utilities.css"
+    "./utilities": "./utilities.css",
+    "./event-broker": {
+      "types": "./src/event-broker.ts",
+      "require": "./dist/event-broker.js",
+      "import": "./src/event-broker.ts"
+    },
+    "./event-broker.js": {
+      "types": "./src/event-broker.ts",
+      "require": "./dist/event-broker.js",
+      "import": "./src/event-broker.ts"
+    }
   },
   "publishConfig": {
     "provenance": true,
@@ -74,6 +94,16 @@
         "style": "./index.css",
         "require": "./dist/lib.js",
         "import": "./dist/lib.mjs"
+      },
+      "./animate-orchestrator": {
+        "types": "./dist/animate-orchestrator.d.mts",
+        "require": "./dist/animate-orchestrator.js",
+        "import": "./dist/animate-orchestrator.mjs"
+      },
+      "./animate-orchestrator.js": {
+        "types": "./dist/animate-orchestrator.d.mts",
+        "require": "./dist/animate-orchestrator.js",
+        "import": "./dist/animate-orchestrator.mjs"
       },
       "./plugin": {
         "require": "./dist/plugin.js",
@@ -115,7 +145,17 @@
       "./theme.css": "./theme.css",
       "./theme": "./theme.css",
       "./utilities.css": "./utilities.css",
-      "./utilities": "./utilities.css"
+      "./utilities": "./utilities.css",
+      "./event-broker": {
+        "types": "./dist/event-broker.d.mts",
+        "require": "./dist/event-broker.js",
+        "import": "./dist/event-broker.mjs"
+      },
+      "./event-broker.js": {
+        "types": "./dist/event-broker.d.mts",
+        "require": "./dist/event-broker.js",
+        "import": "./dist/event-broker.mjs"
+      }
     }
   },
   "style": "index.css",
